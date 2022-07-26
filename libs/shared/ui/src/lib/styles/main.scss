@@ -2,10 +2,9 @@
 @tailwind base;
 @tailwind utilities;
 
+// Fonts
+@import "https://api.fontshare.com/v2/css?f[]=satoshi@700,401,400&f[]=clash-display@600&display=swap";
+
 body {
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #212529;
-  background-color: #f8fafc;
+  font-family: 'Satoshi', sans-serif;
 }
