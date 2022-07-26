@@ -4,7 +4,9 @@
 
 // Fonts
 @import "https://api.fontshare.com/v2/css?f[]=satoshi@700,401,400&f[]=clash-display@600&display=swap";
-
+@import "remixicon/fonts/remixicon.css";
 body {
-  font-family: 'Satoshi', sans-serif;
+  font-family: theme('fontFamily.sans');
+  background-color: theme('colors.dark.400');
+  color: theme('colors.white')
 }

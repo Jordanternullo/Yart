@@ -12,35 +12,6 @@ module.exports = {
         sans: ['Satoshi', 'Helvetica', 'sans-serif'],
         icons: ['remixicon']
       },
-      fontSize: {
-        xxs: [
-          '0.625rem',
-          {
-            lineHeight: '1rem',
-          },
-        ],
-        xs: [
-          '0.75rem',
-          {
-            lineHeight: '1rem',
-            letterSpacing: '0.002em',
-          },
-        ],
-        sm: [
-          '0.875rem',
-          {
-            lineHeight: '1.25rem',
-            letterSpacing: '0.0025em',
-          },
-        ],
-        base: [
-          '1rem',
-          {
-            lineHeight: '1.5rem',
-            letterSpacing: '0.005em',
-          },
-        ],
-      },
       colors: {
         primary: {
          "100": "#ede6ff",
