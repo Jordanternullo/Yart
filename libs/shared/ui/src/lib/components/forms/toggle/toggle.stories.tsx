@@ -3,7 +3,7 @@ import Toggle from './toggle';
 
 export default {
   component: Toggle,
-  title: 'Toogle',
+  title: 'Forms/Toogle',
 } as ComponentMeta<typeof Toggle>;
 
 const Template: ComponentStory<typeof Toggle> = (args) => <Toggle {...args} />;
