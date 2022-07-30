@@ -3,9 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 /* eslint-disable-next-line */
-export interface SignInProps {}
+export interface SignupProps {}
 
-export function SignIn(props: SignInProps) {
+export function Signup(props: SignupProps) {
     return (
         <div
             className={`h-screen flex`}
@@ -49,7 +49,7 @@ export function SignIn(props: SignInProps) {
                     </div>
                     <h1
                         className={`text-3xl sm:text-4xl font-title text-dark-400 text-center`}>
-                        Connexion à Yart avec
+                        S'inscrire à Yart avec
                     </h1>
                     <div className={`flex justify-center gap-4 mt-6`}>
                         <button
@@ -88,10 +88,10 @@ export function SignIn(props: SignInProps) {
                             Se connecter
                         </Button>
                         <p className={`text-dark-400 text-sm`}>
-                            Pas encore sur Yart ?{' '}
-                            <Link href={'/signup'}>
+                            Déjà un compte ?{' '}
+                            <Link href={'/signin'}>
                                 <a className={`text-primary-500 font-bold`}>
-                                    inscrit-toi
+                                    connecte-toi
                                 </a>
                             </Link>
                         </p>
@@ -102,4 +102,4 @@ export function SignIn(props: SignInProps) {
     );
 }
 
-export default SignIn;
+export default Signup;
