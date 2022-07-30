@@ -1,5 +1,5 @@
 import Box from '@material-ui/core/Box';
-import * as CardMUI from '@material-ui/core/Card';
+import { default as CardMUI } from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import { Info, InfoSubtitle, InfoTitle } from '@mui-treasury/components/info';
 import { useGalaxyInfoStyles } from '@mui-treasury/styles/info/galaxy';
@@ -53,7 +53,7 @@ export function Card(props: CardProps) {
     };
 
     return (
-        <CardMUI.default
+        <CardMUI
             className={`group !rounded-2xl !shadow-none relative min-w-[200px] min-h-[360px] !bg-transparent hover:after:content-[''] hover:after:block hover:after:absolute hover:after:w-full hover:after:h-[100%] hover:after:bottom-0 hover:after:z-[1] hover:after:bg-gradient-to-t hover:after:from-black hover:cursor-pointer ${className}`}
             onClick={onClickHandler}
             data-testid="card">
@@ -121,7 +121,7 @@ export function Card(props: CardProps) {
                     </div>
                 </Info>
             </Box>
-        </CardMUI.default>
+        </CardMUI>
     );
 }
 

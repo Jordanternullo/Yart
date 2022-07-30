@@ -7,6 +7,10 @@ module.exports = {
             __dirname,
             'libs/**/**/src/**/**/*!(*.stories|*.spec).{ts,tsx,html}'
         ),
+        join(
+            __dirname,
+            'apps/front/**/**/**/*!(*.stories|*.spec).{ts,tsx,html}'
+        ),
         ...createGlobPatternsForDependencies(__dirname),
     ],
     theme: {
