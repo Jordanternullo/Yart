@@ -6,15 +6,21 @@ import { useDynamicAvatarStyles } from '@mui-treasury/styles/avatar/dynamic';
 export interface AvatarProps {
     image: string;
     size?: string;
+    className?: string;
 }
 
 export function Avatar(props: AvatarProps) {
-    const { image, size } = props;
+    const { image, size, className } = props;
 
     const avatarStyles = useDynamicAvatarStyles({ size: size || 56 });
 
     return (
-        <AvatarMUI.default classes={avatarStyles} src={image} role="image" />
+        <AvatarMUI.default
+            classes={avatarStyles}
+            src={image}
+            role="image"
+            className={className}
+        />
     );
 }
 
