@@ -1,3 +1,4 @@
+export * from './lib/components/nav/nav-item/nav-item';
 export * from './lib/components/avatar/avatar';
 export * from './lib/components/card/card';
 export * from './lib/components/forms/checkbox/checkbox';
