@@ -25,7 +25,7 @@ export function NavItem(props: NavItemProps) {
         active,
     } = props;
     const defineClassName = `flex py-3 px-6 w-max items-center hover:bg-dark-200 hover:text-primary-500 ${className} ${
-        active ? 'bg-dark-200 text-primary-500' : ''
+        active ? 'bg-primary-500 text-white' : ''
     }`;
     return (
         <Link href={link || '/'} passHref>

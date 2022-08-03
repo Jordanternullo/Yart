@@ -28,7 +28,7 @@ describe('NavItem', () => {
         props.active = true;
         render(<NavItem {...props} />);
         const link = screen.getByTestId('link');
-        expect(link.classList.contains('bg-dark-200')).toBe(true);
+        expect(link.classList.contains('bg-primary-500')).toBe(true);
     });
 
     it('should render with correct className', () => {
