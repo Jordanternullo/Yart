@@ -1,11 +1,19 @@
 import { Button, Icon, Input } from '@yart/shared/ui';
+import { supabase } from '../../utils/supabaseClient';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ChangeEvent, useState } from 'react';
 
 /* eslint-disable-next-line */
 export interface SignInProps {}
 
 export function SignIn(props: SignInProps) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const handleSubmit = (e: React.MouseEvent) => {
+        e.preventDefault();
+        supabase.auth.signIn({ email, password });
+    };
     return (
         <div
             className={`h-screen flex`}
@@ -75,6 +83,10 @@ export function SignIn(props: SignInProps) {
                         placeholder="@email.com"
                         labelClassName={`text-dark-400`}
                         className={`mb-6 bg-transparent`}
+                        value={email}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            setEmail(e.target.value)
+                        }
                     />
                     <Input
                         type="password"
@@ -82,9 +94,15 @@ export function SignIn(props: SignInProps) {
                         placeholder="Mot de passe"
                         className={`bg-transparent`}
                         labelClassName={`text-dark-400`}
+                        value={password}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            setPassword(e.target.value)
+                        }
                     />
                     <div className={`text-center mt-16`}>
-                        <Button className={`w-full mb-3 justify-center`}>
+                        <Button
+                            className={`w-full mb-3 justify-center`}
+                            onClick={handleSubmit}>
                             Se connecter
                         </Button>
                         <p className={`text-dark-400 text-sm`}>
