@@ -54,7 +54,7 @@ export function Card(props: CardProps) {
 
     return (
         <CardMUI
-            className={`group !rounded-2xl !shadow-none relative min-w-[200px] min-h-[360px] !bg-transparent hover:after:content-[''] hover:after:block hover:after:absolute hover:after:w-full hover:after:h-[100%] hover:after:bottom-0 hover:after:z-[1] hover:after:bg-gradient-to-t hover:after:from-black hover:cursor-pointer ${className}`}
+            className={`group !rounded-none !shadow-none relative min-w-[200px] min-h-[360px] !bg-transparent hover:after:content-[''] hover:after:block hover:after:absolute hover:after:w-full hover:after:h-[100%] hover:after:bottom-0 hover:after:z-[1] hover:after:bg-gradient-to-t hover:after:from-black hover:cursor-pointer ${className}`}
             onClick={onClickHandler}
             data-testid="card">
             <CardMedia
@@ -72,13 +72,14 @@ export function Card(props: CardProps) {
                 <Info useStyles={useGalaxyInfoStyles}>
                     <div className={`flex justify-between`}>
                         <div className={`items-end space-y-4`}>
-                            <InfoTitle className={`!font-title !text-2xl`}>
+                            <InfoTitle
+                                className={`!font-title !text-2xl !text-white`}>
                                 {post.title}
                             </InfoTitle>
                             <InfoSubtitle
                                 className={`!font-light !text-base flex items-center`}>
                                 <Avatar image={post.author.avatar} size="52" />
-                                <span className={`ml-4`}>
+                                <span className={`ml-4 !text-white`}>
                                     {post.author.name}
                                 </span>
                             </InfoSubtitle>

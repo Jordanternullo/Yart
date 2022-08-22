@@ -1,149 +1,207 @@
-import { Button, Input, NavItem } from '@yart/shared/ui';
-import Image from 'next/image';
-import { useState } from 'react';
+import { Avatar, Card, Icon, Input, Toggle } from '@yart/shared/ui';
+import Layout from '../components/layout';
+import { ImageList, ImageListItem } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 export function Index() {
-    const [collapsed, setCollapsed] = useState(false);
-    /*
-     * Replace the elements below with your own.
-     *
-     * Note: The corresponding styles are in the ./index.scss file.
-     */
-    const handleCollapseNav = () => {
-        setCollapsed(!collapsed);
+    const mock = [
+        {
+            width: 206,
+            height: 300,
+        },
+        {
+            width: 145,
+            height: 300,
+        },
+        {
+            width: 198,
+            height: 300,
+        },
+        {
+            width: 172,
+            height: 300,
+        },
+        {
+            width: 417,
+            height: 300,
+        },
+        {
+            width: 459,
+            height: 300,
+        },
+        {
+            width: 193,
+            height: 300,
+        },
+        {
+            width: 238,
+            height: 300,
+        },
+        {
+            width: 300,
+            height: 300,
+        },
+        {
+            width: 150,
+            height: 300,
+        },
+        {
+            width: 200,
+            height: 300,
+        },
+    ];
+    const card = {
+        title: 'TEST',
+        author: {
+            name: 'author',
+            avatar: 'test',
+        },
+        likes: {
+            count: 12,
+            active: true,
+        },
+        comments: {
+            count: 20,
+            active: false,
+        },
     };
 
-    const classNameNavLeft = `bg-dark-400 fixed h-screen z-10 transition-[width] delay-300 top-[54px] ${
-        collapsed ? 'w-full sm:w-72' : 'hidden sm:block w-[4.5rem]'
-    }`;
+    const [toogle, setToogle] = useState<boolean>(false);
+    const handleViewType = () => {
+        setToogle(!toogle);
+    };
+
     return (
-        <>
-            <header
-                className={`flex fixed top-0 left-0 right-0 bottom-0 h-14 bg-dark-400 items-center	z-20`}
-                role="banner">
-                <Button
-                    onClick={handleCollapseNav}
-                    buttonIcon={'menu-5-line'}
-                    className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent hover:text-primary-500 text-2xl w-12 sm:w-[4.5rem] justify-center`}
-                />
-                <Button
-                    link="/"
-                    className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent hover:text-primary-500 relative !w-12`}>
-                    <Image
-                        src={'/images/logo.svg'}
-                        alt="Yart - Authentification"
-                        layout="fill"
-                    />
-                </Button>
-                <div
-                    className={`flex flex-1 text-center h-10 relative items-center justify-center`}>
-                    <Input
-                        type="text"
-                        placeholder="Recherche sur Yart"
-                        labelClassName={`text-dark-400`}
-                        className={`bg-transparent !h-10 rounded-r-none`}
-                        containerClassName={`w-full sm:w-1/3`}
-                    />
-                    <Button
-                        onClick={() => console.log('send search')}
-                        buttonIcon={'search-2-line'}
-                        className={`!h-10 rounded-l-none	`}
-                    />
+        <Layout>
+            <div className={`px-2 sm:px-12 py-8 flex justify-between`}>
+                <h2
+                    className={`uppercase text-3xl font-title after:content-[''] after:block after:w-1/2 after:h-[2px] after:bg-primary-500 after:m-auto`}>
+                    Homepage
+                </h2>
+                <div>
+                    <span className={`pr-2`}>Images</span>
+                    <Toggle onChange={handleViewType}></Toggle>
+                    <span className={`pl-2`}>Post</span>
                 </div>
-                <Button
-                    onClick={() => console.log('notification')}
-                    buttonIcon={'notification-4-line'}
-                    className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent hover:text-primary-500 text-2xl px-0 sm:px-4`}
-                />
-                <Button
-                    onClick={() => console.log('user')}
-                    buttonIcon={'user-3-line'}
-                    className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent hover:text-primary-500 text-2xl pl-2 sm:pl-4`}
-                />
-            </header>
-            <div className={`grid relative w-full`}>
-                <div className={classNameNavLeft}>
-                    <nav>
-                        <ul>
-                            <li>
-                                <NavItem
-                                    label="Home"
-                                    picto="home-4-line"
-                                    link="/"
-                                    className="!w-full truncate"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                            <li>
-                                <NavItem
-                                    label="Vos favoris"
-                                    picto="heart-line"
-                                    link="/"
-                                    className="!w-full truncate"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                            <li>
-                                <NavItem
-                                    label="Publication du jour"
-                                    picto="calendar-line"
-                                    link="/"
-                                    className="!w-full truncate"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                            <li>
-                                <NavItem
-                                    label="Catégories"
-                                    picto="folders-line"
-                                    link="/"
-                                    className="!w-full truncate"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                            <li>
-                                <NavItem
-                                    label="Tops"
-                                    picto="fire-line"
-                                    link="/"
-                                    className="!w-full truncate"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                        </ul>
-                        <ul
-                            className={`before:content-[''] before:w-full before:h-px before:bg-primary-500 before:block`}>
-                            <li>
-                                <NavItem
-                                    avatar="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg"
-                                    label="Skypell"
-                                    picto="fire-line"
-                                    link="/"
-                                    className="!w-full truncate !px-4"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                            <li>
-                                <NavItem
-                                    avatar="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg"
-                                    label="DiimDim"
-                                    picto="fire-line"
-                                    link="/"
-                                    className="!w-full truncate !px-4"
-                                    collapsed={collapsed}
-                                />
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                {collapsed && (
-                    <div
-                        className="bg-dark-500/50 fixed top-0 bottom-0 left-0 right-0 z-0"
-                        onClick={handleCollapseNav}></div>
-                )}
-                <main></main>
             </div>
-        </>
+            <div className={`px-2 sm:px-12`}>
+                {!toogle && (
+                    <div
+                        className={`grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 gap-0.5`}>
+                        {mock.map((item, index) => {
+                            return (
+                                <div key={index} className={`h-[256px]`}>
+                                    <Card
+                                        post={card}
+                                        className={`h-full min-h-[0px] min-w-[0px]`}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+                {toogle && (
+                    <div className={`w-2/4 mx-auto my-0`}>
+                        <div
+                            className={`w-full bg-dark-400 flex items-center gap-4 p-4 rounded-md mb-5`}>
+                            <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
+                            <Input
+                                containerClassName="w-full h-fit"
+                                placeholder={'Quoi de neuf, Skypell ?'}
+                            />
+                        </div>
+                        <div className={`w-full bg-dark-400 p-4 rounded-md`}>
+                            <div className="flex gap-4">
+                                <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
+                                <div className="flex flex-col justify-center">
+                                    <span className={`font-title text-base`}>
+                                        Skypell
+                                    </span>
+                                    <span className="text-xs">
+                                        Il y a 5 min
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="mt-4">
+                                <h2 className="font-title text-3xl mb-3">
+                                    Title why many word
+                                </h2>
+                                <p className="text-base font-normal	">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Duis ac sapien aliquam,
+                                    efficitur nisl pulvinar, auctor metus.
+                                    Suspendisse rutrum nibh id ex pellentesque
+                                    cursus. Mauris bibendum tincidunt mauris
+                                    quis mattis. Nulla ut faucibus arcu.
+                                    Maecenas rhoncus, velit non auctor
+                                    efficitur, eros quam suscipit dolor, nec
+                                    pharetra justo nisi et magna. Etiam a velit
+                                    vel justo tristique auctor. Maecenas
+                                    tincidunt massa et turpis feugiat, feugiat
+                                    vehicula diam maximus. Duis in porta nisl,
+                                    vitae mollis nulla. `` Nullam nibh est,
+                                    fermentum nec efficitur eu, tincidunt ut
+                                    turpis. Curabitur in dolor mi. Quisque
+                                    posuere egestas purus eget blandit.
+                                </p>
+                            </div>
+                            <div className="flex justify-between mt-3">
+                                <span className="font-bold hover:cursor-pointer">
+                                    Voir plus
+                                </span>
+                                <div className="flex gap-4">
+                                    <div
+                                        className={`flex items-center space-x-1 hover:cursor-pointer`}>
+                                        <span className={`text-base`}>28</span>
+                                        <Icon
+                                            name={'thumb-up-line'}
+                                            className={`text-2xl`}></Icon>
+                                    </div>
+                                    <div
+                                        className={`flex items-center space-x-1 hover:cursor-pointer`}>
+                                        <span className={`text-base`}>13</span>
+                                        <Icon
+                                            name={'chat-3-line'}
+                                            className={`text-2xl`}></Icon>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex justify-between border-primary-500 border-solid border-y py-2.5 my-4">
+                                <div className="flex items-center gap-2 hover:cursor-pointer">
+                                    <Icon
+                                        name={'thumb-up-line'}
+                                        className="text-2xl"
+                                    />
+                                    <span>J'aime</span>
+                                </div>
+                                <div className="flex items-center gap-2 hover:cursor-pointer">
+                                    <Icon
+                                        name={'chat-3-line'}
+                                        className="text-2xl"
+                                    />
+                                    <span>Réagir</span>
+                                </div>
+                                <div className="flex items-center gap-2 hover:cursor-pointer">
+                                    <Icon
+                                        name={'share-forward-line'}
+                                        className="text-2xl"
+                                    />
+                                    <span>Partager</span>
+                                </div>
+                            </div>
+                            <div
+                                className={`w-full flex items-center gap-4 p-4`}>
+                                <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
+                                <Input
+                                    containerClassName="w-full h-fit"
+                                    placeholder={'Quoi de neuf, Skypell ?'}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </Layout>
     );
 }
 
