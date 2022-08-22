@@ -3,6 +3,7 @@ import { supabase } from '../../utils/supabaseClient';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChangeEvent, useState } from 'react';
+import Router from 'next/router';
 
 /* eslint-disable-next-line */
 export interface SignupProps {}
@@ -13,7 +14,9 @@ export function Signup(props: SignupProps) {
 
     const handleSubmit = (e: React.MouseEvent) => {
         e.preventDefault();
-        supabase.auth.signUp({ email, password });
+        supabase.auth.signUp({ email, password }).then((res) => {
+            Router.push('/');
+        });
     };
     return (
         <div

@@ -3,6 +3,7 @@ import { supabase } from '../../utils/supabaseClient';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChangeEvent, useState } from 'react';
+import Router from 'next/router';
 
 /* eslint-disable-next-line */
 export interface SignInProps {}
@@ -12,7 +13,9 @@ export function SignIn(props: SignInProps) {
     const [password, setPassword] = useState('');
     const handleSubmit = (e: React.MouseEvent) => {
         e.preventDefault();
-        supabase.auth.signIn({ email, password });
+        supabase.auth.signIn({ email, password }).then((res) => {
+            Router.push('/');
+        });
     };
     return (
         <div
