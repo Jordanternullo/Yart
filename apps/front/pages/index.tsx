@@ -101,7 +101,7 @@ export function Index() {
                     </div>
                 )}
                 {toogle && (
-                    <div className={`w-2/4 mx-auto my-0`}>
+                    <div className={`sm:w-2/4 sm:mx-auto sm:my-0`}>
                         <div
                             className={`w-full bg-dark-400 flex items-center gap-4 p-4 rounded-md mb-5`}>
                             <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
