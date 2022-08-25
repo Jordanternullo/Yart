@@ -1,7 +1,7 @@
 import { Avatar, Card, Icon, Input, Toggle } from '@yart/shared/ui';
 import Layout from '../components/layout';
-import { ImageList, ImageListItem } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export function Index() {
     const mock = [
@@ -91,10 +91,12 @@ export function Index() {
                         {mock.map((item, index) => {
                             return (
                                 <div key={index} className={`h-[256px]`}>
-                                    <Card
-                                        post={card}
-                                        className={`h-full min-h-[0px] min-w-[0px]`}
-                                    />
+                                    <Link href="/skypell/picture/1">
+                                        <Card
+                                            post={card}
+                                            className={`h-full min-h-[0px] min-w-[0px]`}
+                                        />
+                                    </Link>
                                 </div>
                             );
                         })}

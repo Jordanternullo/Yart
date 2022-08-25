@@ -15,6 +15,7 @@ const nextConfig = {
             'i.etsystatic.com',
             'media.gqmagazine.fr',
             'is4-ssl.mzstatic.com',
+            'image-us.samsung.com',
         ], //Domain of image host
     },
 };

@@ -9,3 +9,38 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model users {
+  ref_user    String     @id @default(uuid())
+  posts posts[]
+  comments comments[]
+  likes likes[]
+}
+
+model posts {
+  id        String      @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  content   String?
+  author    users     @relation(fields: [authorId], references: [ref_user])
+  authorId  String
+  comments comments[]
+  likes likes[]
+}
+
+model comments {
+  id        String      @id @default(uuid())
+  author    users     @relation(fields: [authorId], references: [ref_user])
+  authorId  String
+  posts     posts    @relation(fields: [postId], references: [id])
+  postId    String
+}
+
+model likes {
+  id        String      @id @default(uuid())
+  author    users     @relation(fields: [authorId], references: [ref_user])
+  authorId  String
+  posts     posts    @relation(fields: [postId], references: [id])
+  postId    String
+}

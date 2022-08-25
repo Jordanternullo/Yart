@@ -6,7 +6,12 @@ import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 
-const Layout = ({ children }) => {
+export interface LayoutProps {
+    children: React.ReactNode;
+    hiddenLeftBar?: boolean;
+}
+
+const Layout = (props: LayoutProps) => {
     const [collapsed, setCollapsed] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [authenticatedState, setAuthenticatedState] = useState(false);
@@ -75,7 +80,7 @@ const Layout = ({ children }) => {
     }
     const classNameNavLeft = `bg-dark-400 fixed h-screen z-10 transition-[width] delay-300 top-[54px] ${
         collapsed ? 'w-full sm:w-72' : 'hidden sm:block w-[4.5rem]'
-    }`;
+    } ${props.hiddenLeftBar ? 'hidden sm:hidden' : ''}`;
 
     const classBurgerMenu = collapsed ? 'text-primary-500' : '';
     return (
@@ -223,7 +228,12 @@ const Layout = ({ children }) => {
                         className="bg-dark-500/50 fixed top-0 bottom-0 left-0 right-0 z-[1]"
                         onClick={handleCollapseNav}></div>
                 )}
-                <main className={`mt-[56px] sm:pl-[4.5rem]`}>{children}</main>
+                <main
+                    className={`mt-[56px] sm:pl-[4.5rem] ${
+                        props.hiddenLeftBar ? 'sm:pl-0' : ''
+                    }`}>
+                    {props.children}
+                </main>
             </div>
         </>
     );

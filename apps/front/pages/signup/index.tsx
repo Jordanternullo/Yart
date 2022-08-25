@@ -2,7 +2,7 @@ import { Button, Icon, Input } from '@yart/shared/ui';
 import { supabase } from '../../utils/supabaseClient';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Router from 'next/router';
 
 /* eslint-disable-next-line */
