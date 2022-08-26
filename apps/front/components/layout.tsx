@@ -27,7 +27,6 @@ const Layout = (props: LayoutProps) => {
                 }
                 if (event === 'SIGNED_IN') {
                     setAuthenticatedState(true);
-                    Router.push('/');
                 }
                 if (event === 'SIGNED_OUT') {
                     setAuthenticatedState(false);
