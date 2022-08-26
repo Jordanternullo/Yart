@@ -2,7 +2,7 @@ import { Avatar, Button, Icon, Input } from '@yart/shared/ui';
 import Layout from '../../../../components/layout';
 import { useRouter } from 'next/router';
 
-export default function Picture() {
+export default function Index() {
     const router = useRouter();
     const user = router.query.user as string;
     const id = router.query.id as string;
