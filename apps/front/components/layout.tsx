@@ -180,7 +180,7 @@ const Layout = (props: LayoutProps) => {
                                 <NavItem
                                     label="Catégories"
                                     picto="folders-line"
-                                    link="/"
+                                    link="/categories"
                                     className="!w-full truncate"
                                     collapsed={collapsed}
                                 />
