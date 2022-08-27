@@ -167,7 +167,7 @@ const Layout = (props: LayoutProps) => {
                                     collapsed={collapsed}
                                 />
                             </li>
-                            <li>
+                            {/* <li>
                                 <NavItem
                                     label="Publication du jour"
                                     picto="calendar-line"
@@ -175,7 +175,7 @@ const Layout = (props: LayoutProps) => {
                                     className="!w-full truncate"
                                     collapsed={collapsed}
                                 />
-                            </li>
+                            </li> */}
                             <li>
                                 <NavItem
                                     label="Catégories"
@@ -185,7 +185,7 @@ const Layout = (props: LayoutProps) => {
                                     collapsed={collapsed}
                                 />
                             </li>
-                            <li>
+                            {/* <li>
                                 <NavItem
                                     label="Tops"
                                     picto="fire-line"
@@ -193,7 +193,7 @@ const Layout = (props: LayoutProps) => {
                                     className="!w-full truncate"
                                     collapsed={collapsed}
                                 />
-                            </li>
+                            </li> */}
                         </ul>
                         <ul
                             className={`before:content-[''] before:w-full before:h-px before:bg-primary-500 before:block`}>

@@ -27,6 +27,8 @@ model posts {
   authorId  String
   comments comments[]
   likes likes[]
+  category     categories    @relation(fields: [categoryId], references: [id])
+  categoryId    String
 }
 
 model comments {
@@ -43,4 +45,10 @@ model likes {
   authorId  String
   posts     posts    @relation(fields: [postId], references: [id])
   postId    String
+}
+
+model categories {
+  id        String      @id @default(uuid())
+  name      String
+  posts posts[]
 }
