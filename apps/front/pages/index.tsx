@@ -1,75 +1,31 @@
 import { Avatar, Card, Icon, Input, Toggle } from '@yart/shared/ui';
-import Layout from '../components/layout';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Skeleton } from '@mui/material';
+import { getPosts } from '@yart/shared/api';
+import Layout from '../components/layout';
 
 export function Index() {
-    const mock = [
-        {
-            width: 206,
-            height: 300,
-        },
-        {
-            width: 145,
-            height: 300,
-        },
-        {
-            width: 198,
-            height: 300,
-        },
-        {
-            width: 172,
-            height: 300,
-        },
-        {
-            width: 417,
-            height: 300,
-        },
-        {
-            width: 459,
-            height: 300,
-        },
-        {
-            width: 193,
-            height: 300,
-        },
-        {
-            width: 238,
-            height: 300,
-        },
-        {
-            width: 300,
-            height: 300,
-        },
-        {
-            width: 150,
-            height: 300,
-        },
-        {
-            width: 200,
-            height: 300,
-        },
-    ];
-    const card = {
-        title: 'TEST',
-        author: {
-            name: 'author',
-            avatar: 'test',
-        },
-        likes: {
-            count: 12,
-            active: true,
-        },
-        comments: {
-            count: 20,
-            active: false,
-        },
-    };
-
+    const [postsImage, setPostsImage] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [toogle, setToogle] = useState<boolean>(false);
     const handleViewType = () => {
         setToogle(!toogle);
     };
+
+    useEffect(() => {
+        setLoading(true);
+        getPosts()
+            .then((data) => {
+                setPostsImage(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
 
     return (
         <Layout>
@@ -88,18 +44,29 @@ export function Index() {
                 {!toogle && (
                     <div
                         className={`grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 gap-0.5`}>
-                        {mock.map((item, index) => {
-                            return (
-                                <div key={index} className={`h-[256px]`}>
-                                    <Link href="/skypell/picture/1">
-                                        <Card
-                                            post={card}
-                                            className={`h-full min-h-[0px] min-w-[0px]`}
-                                        />
-                                    </Link>
-                                </div>
-                            );
-                        })}
+                        {loading
+                            ? [...Array(10)].map((index) => {
+                                  return (
+                                      <Skeleton
+                                          key={index}
+                                          variant="rectangular"
+                                          width={253}
+                                          height={256}
+                                      />
+                                  );
+                              })
+                            : postsImage?.map((item, index) => {
+                                  return (
+                                      <div key={index} className={`h-[256px]`}>
+                                          <Link href="/skypell/picture/1">
+                                              <Card
+                                                  post={item}
+                                                  className={`h-full min-h-[0px] min-w-[0px]`}
+                                              />
+                                          </Link>
+                                      </div>
+                                  );
+                              })}
                     </div>
                 )}
                 {toogle && (

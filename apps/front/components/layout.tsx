@@ -1,10 +1,9 @@
 import { Menu, MenuItem } from '@mui/material';
+import { supabase } from '@yart/shared/api';
 import { Button, Input, NavItem } from '@yart/shared/ui';
-import axios from 'axios';
 import Image from 'next/image';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
-import { supabase } from '../utils/supabaseClient';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -18,13 +17,12 @@ const Layout = (props: LayoutProps) => {
     const open = Boolean(anchorEl);
 
     useEffect(() => {
+        if (supabase.auth.user()) {
+            setAuthenticatedState(true);
+        }
         const { data: authListener } = supabase.auth.onAuthStateChange(
             (event, session) => {
-                try {
-                    handleAuthChange(event, session);
-                } catch (error) {
-                    console.log(error);
-                }
+                console.log(event);
                 if (event === 'SIGNED_IN') {
                     setAuthenticatedState(true);
                 }
@@ -33,11 +31,10 @@ const Layout = (props: LayoutProps) => {
                 }
             }
         );
-        checkUser();
         return () => {
             authListener.unsubscribe();
         };
-    });
+    }, []);
 
     const handleCollapseNav = () => {
         setCollapsed(!collapsed);
@@ -45,7 +42,7 @@ const Layout = (props: LayoutProps) => {
     const handleLogout = async () => {
         try {
             await supabase.auth.signOut();
-            Router.push('/');
+            Router.reload('/');
         } catch (error) {
             console.error(error);
         }
@@ -59,24 +56,7 @@ const Layout = (props: LayoutProps) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    async function checkUser() {
-        const user = await supabase.auth.user();
-        if (user) {
-            setAuthenticatedState(true);
-        }
-    }
-    async function handleAuthChange(event, session) {
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-        await axios.post(
-            '/api/auth',
-            { event, session },
-            {
-                headers,
-            }
-        );
-    }
+
     const classNameNavLeft = `bg-dark-400 fixed h-screen z-10 transition-[width] delay-300 top-[54px] ${
         collapsed ? 'w-full sm:w-72' : 'hidden sm:block w-[4.5rem]'
     } ${props.hiddenLeftBar ? 'hidden sm:hidden' : ''}`;

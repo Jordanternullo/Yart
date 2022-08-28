@@ -9,8 +9,8 @@ describe('Card', () => {
         props = {
             post: {
                 title: 'Title Post',
-                author: {
-                    name: 'Pseudo author',
+                user: {
+                    name: 'Pseudo user',
                     avatar: 'https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$',
                 },
                 comments: {

@@ -1,9 +1,9 @@
 import { Button, Icon, Input } from '@yart/shared/ui';
-import { supabase } from '../../utils/supabaseClient';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChangeEvent, useEffect, useState } from 'react';
 import Router from 'next/router';
+import { supabase } from '@yart/shared/api';
 
 /* eslint-disable-next-line */
 export interface SignupProps {}

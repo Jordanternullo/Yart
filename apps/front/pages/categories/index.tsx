@@ -1,9 +1,9 @@
 import { Card } from '@yart/shared/ui';
 import Layout from '../../components/layout';
-import { supabase } from '../../utils/supabaseClient';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/material';
+import { supabase } from '@yart/shared/api';
 
 export default function Index() {
     const [categories, setCategories] = useState([]);

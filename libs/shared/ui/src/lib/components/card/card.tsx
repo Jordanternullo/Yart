@@ -12,7 +12,7 @@ import Icon from '../icon/icon';
 export interface CardProps {
     post: {
         title: string;
-        author?: {
+        user?: {
             name: string;
             avatar: string;
         };
@@ -87,15 +87,15 @@ export function Card(props: CardProps) {
                                 className={`!font-title !text-2xl !text-white`}>
                                 {post.title}
                             </InfoTitle>
-                            {post.author && (
+                            {post.user && (
                                 <InfoSubtitle
                                     className={`!font-light !text-base flex items-center`}>
                                     <Avatar
-                                        image={post.author.avatar}
+                                        image={post.user.avatar}
                                         size="52"
                                     />
                                     <span className={`ml-4 !text-white`}>
-                                        {post.author.name}
+                                        {post.user.name}
                                     </span>
                                 </InfoSubtitle>
                             )}

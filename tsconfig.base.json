@@ -15,6 +15,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@yart/shared/api": ["libs/shared/api/src/index.ts"],
             "@yart/shared/ui": ["libs/shared/ui/src/index.ts"]
         }
     },

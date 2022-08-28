@@ -12,6 +12,7 @@ datasource db {
 
 model users {
   ref_user    String     @id @default(uuid())
+  name        String?
   posts posts[]
   comments comments[]
   likes likes[]
