@@ -50,6 +50,6 @@ model likes {
 
 model categories {
   id        String      @id @default(uuid())
-  name      String
+  title      String
   posts posts[]
 }

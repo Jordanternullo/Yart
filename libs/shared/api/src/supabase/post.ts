@@ -5,7 +5,7 @@ export async function getPosts() {
         const query = supabase
             .from('posts')
             .select(
-                `title, user:authorId(name), likes(authorId), comments(authorId))`
+                `id, title, user:authorId(name), likes(authorId), comments(authorId))`
             );
         const { data, error } = await query;
         if (data) {

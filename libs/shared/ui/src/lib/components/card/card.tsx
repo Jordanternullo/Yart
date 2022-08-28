@@ -102,7 +102,7 @@ export function Card(props: CardProps) {
                         </div>
                         {post.comments && post.likes && (
                             <div
-                                className={`flex flex-col justify-end space-y-1 sm:flex-row text-white sm:space-x-4 items-end`}>
+                                className={`flex flex-col justify-end space-y-1 text-white sm:space-x-4 items-end`}>
                                 <div
                                     className={`flex items-center space-x-1 hover:cursor-pointer`}
                                     onClick={onClickComment}

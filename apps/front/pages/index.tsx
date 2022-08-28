@@ -16,8 +16,8 @@ export function Index() {
     useEffect(() => {
         setLoading(true);
         getPosts()
-            .then((data) => {
-                setPostsImage(data);
+            .then((posts) => {
+                setPostsImage(posts);
             })
             .catch((error) => {
                 console.log(error);
@@ -43,7 +43,7 @@ export function Index() {
             <div className={`px-2 sm:px-12`}>
                 {!toogle && (
                     <div
-                        className={`grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 gap-0.5`}>
+                        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6 gap-0.5`}>
                         {loading
                             ? [...Array(10)].map((index) => {
                                   return (
@@ -58,7 +58,8 @@ export function Index() {
                             : postsImage?.map((item, index) => {
                                   return (
                                       <div key={index} className={`h-[256px]`}>
-                                          <Link href="/skypell/picture/1">
+                                          <Link
+                                              href={`/${item.user.name}/picture/${item.id}`}>
                                               <Card
                                                   post={item}
                                                   className={`h-full min-h-[0px] min-w-[0px]`}

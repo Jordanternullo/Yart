@@ -3,27 +3,25 @@ import Layout from '../../components/layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/material';
-import { supabase } from '@yart/shared/api';
+import { getCategories } from '@yart/shared/api';
+import slugify from 'react-slugify';
 
 export default function Index() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        getCategories();
+        setLoading(true);
+        getCategories()
+            .then((categories) => {
+                setCategories(categories);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
-    const getCategories = async () => {
-        try {
-            setLoading(true);
-            const { data, error } = await supabase
-                .from('categories')
-                .select('*');
-            setCategories(data);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    };
     return (
         <Layout>
             <div className={`px-2 sm:px-12 py-8 flex`}>
@@ -51,9 +49,12 @@ export default function Index() {
                                   <div
                                       key={index}
                                       className={`h-[256px] w-full`}>
-                                      <Link href="/category/warhammer">
+                                      <Link
+                                          href={`/categories/${slugify(
+                                              item.title
+                                          )}`}>
                                           <Card
-                                              post={{ title: item.name }}
+                                              post={{ title: item.title }}
                                               className={`h-full min-h-[0px] min-w-[0px]`}
                                               showInfo={true}
                                           />
