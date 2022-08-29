@@ -17,7 +17,7 @@ export async function getCategoriesBySlug(titleSlug: string) {
     try {
         const { data, error } = await supabase
             .from('categories')
-            .select('*, title');
+            .select('*');
         if (error) {
             throw error;
         }

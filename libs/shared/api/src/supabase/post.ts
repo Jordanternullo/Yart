@@ -1,12 +1,15 @@
 import { supabase } from './client';
 
-export async function getPosts() {
+export async function getPosts(category?: string) {
     try {
-        const query = supabase
+        let query = supabase
             .from('posts')
             .select(
-                `id, title, user:authorId(name), likes(authorId), comments(authorId))`
+                `id, categoryId!inner(title), title, user:authorId(name), likes(authorId), comments(authorId))`
             );
+        if (category) {
+            query = query.eq('categoryId.title', category);
+        }
         const { data, error } = await query;
         if (data) {
             data.map((item) => {
