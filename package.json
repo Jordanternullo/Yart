@@ -30,6 +30,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-dropzone": "^14.2.2",
     "react-slugify": "^2.1.0",
+    "react-tag-input": "^6.8.0",
     "regenerator-runtime": "0.13.7",
     "remixicon": "^2.5.0",
     "tslib": "^2.3.0"
