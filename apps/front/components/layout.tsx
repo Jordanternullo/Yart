@@ -1,9 +1,15 @@
 import { Menu, MenuItem } from '@mui/material';
 import { supabase } from '@yart/shared/api';
-import { Button, Input, NavItem } from '@yart/shared/ui';
+import { Button, Dialog, File, Input, NavItem } from '@yart/shared/ui';
 import Image from 'next/image';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+const Editor = dynamic(
+    () => import('react-draft-wysiwyg').then((mod) => mod.Editor),
+    { ssr: false }
+);
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -42,7 +48,7 @@ const Layout = (props: LayoutProps) => {
     const handleLogout = async () => {
         try {
             await supabase.auth.signOut();
-            Router.reload('/');
+            Router.reload();
         } catch (error) {
             console.error(error);
         }
@@ -96,6 +102,12 @@ const Layout = (props: LayoutProps) => {
                         className={`!h-10 rounded-l-none focus:bg-transparent focus:outline-none`}
                     />
                 </div>
+                <Dialog
+                    trigger={<Button>+ New</Button>}
+                    title="Créer une publication">
+                    <File />
+                </Dialog>
+
                 <Button
                     onClick={() => console.log('notification')}
                     buttonIcon={'notification-4-line'}

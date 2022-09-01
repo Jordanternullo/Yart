@@ -14,8 +14,8 @@ export interface FileProps {
 export function File(props: FileProps) {
     const {
         onChange,
-        maxFiles = 1,
-        maxSize = 1,
+        maxFiles = 10,
+        maxSize = 1000000,
         accept,
         disabled = false,
         className = '',
@@ -24,6 +24,7 @@ export function File(props: FileProps) {
     const [fileName, setFileName] = useState<string[]>([]);
 
     const handleDrop = (acceptedFiles: File[]) => {
+        console.log(acceptedFiles.map((file) => file.name));
         setFileName(acceptedFiles.map((file) => file.name));
         onChange && onChange(acceptedFiles);
     };
