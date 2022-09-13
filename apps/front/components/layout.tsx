@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from '@mui/material';
-import { supabase } from '@yart/shared/api';
-import { Button, Dialog, File, Input, NavItem } from '@yart/shared/ui';
+import { getCategories, supabase } from '@yart/shared/api';
+import { Button, Input, NavItem } from '@yart/shared/ui';
 import Image from 'next/image';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ const Editor = dynamic(
     { ssr: false }
 );
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import ModalCreatePost from './modal/modal-create-post';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -20,6 +21,8 @@ const Layout = (props: LayoutProps) => {
     const [collapsed, setCollapsed] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [authenticatedState, setAuthenticatedState] = useState(false);
+    
+
     const open = Boolean(anchorEl);
 
     useEffect(() => {
@@ -37,6 +40,7 @@ const Layout = (props: LayoutProps) => {
                 }
             }
         );
+        
         return () => {
             authListener.unsubscribe();
         };
@@ -102,29 +106,7 @@ const Layout = (props: LayoutProps) => {
                         className={`!h-10 rounded-l-none focus:bg-transparent focus:outline-none`}
                     />
                 </div>
-                <Dialog
-                    trigger={<Button>+ New</Button>}
-                    title="Créer une publication">
-                        <Input 
-                        type="text"
-                        placeholder="Titre de l'article"
-                        labelClassName={`text-dark-400`}
-                        className={`bg-transparent !h-10`}
-                        containerClassName={`w-full sm:w-1/3`}
-                        />
-                        <Editor 
-                        toolbar={{
-                            options: ['textAlign', 'list', 'fontSize', 'inline'],
-                            inline: {inDropdown: true},
-                            list: {inDropdown: true},
-                            textAlign: {inDropdown: true}
-                        }}
-                        wrapperClassName={`w-full !box-border border-2 border-dark-300 text-sm text-white bg-dark-400 rounded-md outline-none focus:border-primary-300 transition bg-transparent`}
-                        toolbarClassName={`!border-transparent !border-b !border-b-primary-500 text-dark-500 !bg-transparent `}
-                        editorClassName={`px-4 min-h-[200px]`} />
-                    <File />
-                </Dialog>
-
+                <ModalCreatePost trigger={'New'} />
                 <Button
                     onClick={() => console.log('notification')}
                     buttonIcon={'notification-4-line'}

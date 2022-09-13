@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
-import { WithContext as ReactTags } from 'react-tag-input';
+import React, { Component, useState } from 'react';
+const ReactTags = dynamic(() => import('react-tag-input').then((module) => module.WithContext), { ssr: false });
 
 /* eslint-disable-next-line */
 export enum InputTagsState {
@@ -16,6 +16,7 @@ export interface InputTagsProps extends React.ComponentPropsWithoutRef<'input'> 
     containerClassName?: string;
     state?: InputTagsState;
     errorMessage?: string;
+    tags: [];
     onChange?: (event: React.ChangeEvent) => void;
 }
 
@@ -28,45 +29,39 @@ export function InputTags(props: InputTagsProps) {
         state = InputTagsState.Normal,
         errorMessage,
         onChange,
+        tags = [],
         ...inputProps
     } = props;
 
-    const [value, setValue] = useState<string>('');
-    const [tags, setTags] = useState([
-        { id: 'Thailand', text: 'Thailand' }
-    ])
+    
     const stateClassName = {
         [InputTagsState.Normal]: '',
         [InputTagsState.Error]: '!border-error-500',
         [InputTagsState.Success]: '!border-success-500',
     };
     const haveValueClassName =
-        value.length > 0 && state === InputTagsState.Normal
+        tags.length > 0 && state === InputTagsState.Normal
             ? `!border-primary-300`
             : '';
 
     const disabledClassName = inputProps.disabled ? '!bg-dark-200' : '';
-    const handleAddition = (tag) => {
-        setTags([...tags, tag]);
+    const handleAddition = (tag) => {;
+        console.log(tag)
+        onChange && onChange(tag);
       };
-      const handleDrag = (tag, currPos, newPos) => {
-        const newTags = tags.slice();
-    
-        newTags.splice(currPos, 1);
-        newTags.splice(newPos, 0, tag);
-    
-        // re-render
-        setTags(newTags);
+    const handleDrag = (tag, currPos, newPos) => {
+    const newTags = tags.slice();
+
+    newTags.splice(currPos, 1);
+    newTags.splice(newPos, 0, tag);
+
+    onChange && onChange(newTags);
+    };
+
+    const handleDelete = (i: number)=> {
+        onChange && onChange(tags.filter((tag, index) => index !== i));
       };
 
-    const handleDelete = (i, event)=> {
-        console.log(i)
-        console.log(event)
-        console.log(event.target?.className)
-        if(i.target?.className === 'ReactTags__remove') {
-            setTags(tags.filter((tag, index) => index !== i));
-        }
-      };
     return (
         <label className={containerClassName}>
             {label && (
@@ -76,9 +71,8 @@ export function InputTags(props: InputTagsProps) {
                     {label}
                 </span>
             )}
-            <div className={`h-10 w-full flex items-center border-2 border-dark-300 text-sm text-white bg-dark-400 rounded-md px-4 py-2 outline-none focus:border-primary-300 transition h-auto ${stateClassName[state]} ${haveValueClassName} ${disabledClassName} ${className}`}>
+            <div className={`h-10 w-full flex items-center border-2 border-dark-300 text-sm text-white rounded-md px-4 py-2 outline-none focus:border-primary-300 transition h-auto ${stateClassName[state]} ${haveValueClassName} ${disabledClassName} ${className}`}>
                 <ReactTags
-                    inline
                     tags={tags}
                     placeholder={'Ajouter un tag'}
                     handleAddition={handleAddition}
@@ -103,5 +97,4 @@ export function InputTags(props: InputTagsProps) {
         </label>
     );
 }
-
 export default InputTags;

@@ -9,11 +9,13 @@ export interface FileProps {
     accept?: { [key: string]: string[] };
     disabled?: boolean;
     className?: string;
+    data: File[];
 }
 
 export function File(props: FileProps) {
     const {
         onChange,
+        data = [],
         maxFiles = 10,
         maxSize = 1000000,
         accept,
@@ -21,11 +23,8 @@ export function File(props: FileProps) {
         className = '',
     } = props;
     const [dragOver, setDragOver] = useState(false);
-    const [fileName, setFileName] = useState<string[]>([]);
 
     const handleDrop = (acceptedFiles: File[]) => {
-        console.log(acceptedFiles.map((file) => file.name));
-        setFileName(acceptedFiles.map((file) => file.name));
         onChange && onChange(acceptedFiles);
     };
 
@@ -50,7 +49,7 @@ export function File(props: FileProps) {
                                 : ''
                         } ${className}`}>
                         <input {...getInputProps()} />
-                        {fileName.length === 0 && (
+                        {data.length < 1 && (
                             <>
                                 <Button
                                     size={ButtonSize.Very_small}
@@ -64,14 +63,14 @@ export function File(props: FileProps) {
                                 </p>
                             </>
                         )}
-                        {fileName.length > 0 && (
+                        {data.length > 0 && (
                             <>
                                 <Button
                                     size={ButtonSize.Very_small}
                                     className="mb-3">
                                     Changer le fichier
                                 </Button>
-                                <p className="text-xs">{fileName.join(', ')}</p>
+                                <p className="text-xs">{data.map((file) => file.name).join(', ')}</p>
                             </>
                         )}
                     </div>

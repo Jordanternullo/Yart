@@ -11,4 +11,6 @@ const Template: ComponentStory<typeof InputTags> = (args) => (
 );
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+    tags: [{id : 'tags 1'}],
+};
