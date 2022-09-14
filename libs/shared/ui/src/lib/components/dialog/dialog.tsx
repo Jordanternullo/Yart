@@ -6,7 +6,7 @@ import Button, { ButtonColor, ButtonSize } from '../button/button';
 export interface DialogProps {
     trigger: React.ReactNode;
     title: string;
-    classNameChildren: string,
+    classNameChildren?: string,
     children?: React.ReactNode;
     buttons?: React.ReactNode;
     open?: boolean;

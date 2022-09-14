@@ -106,7 +106,7 @@ const Layout = (props: LayoutProps) => {
                         className={`!h-10 rounded-l-none focus:bg-transparent focus:outline-none`}
                     />
                 </div>
-                <ModalCreatePost trigger={'New'} />
+                <ModalCreatePost trigger={'+ New'} />
                 <Button
                     onClick={() => console.log('notification')}
                     buttonIcon={'notification-4-line'}

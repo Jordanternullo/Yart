@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { ChangeEvent, useEffect, useState } from "react";
 import draftToHtml from 'draftjs-to-html';
 import { EditorState, convertToRaw } from 'draft-js';
-import { createPosts, getCategories, supabase } from "@yart/shared/api";
+import { createPosts, getCategories, supabase, uploadImage } from "@yart/shared/api";
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -22,6 +22,9 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
     const [content, setContent] = useState(EditorState.createEmpty());
     const [files, setFiles] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [categorieSelected, setCategorieSelected] = useState(null);
+    const [modalShow, setModalShow] = useState(false);
+    const [modalConfirmShow, setModalConfirmShow] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -37,33 +40,46 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
                 setLoading(false);
             });
     }, [] )
+
     const handleSubmitForm = () => {
-        const post = {
-            id: uuidv4(),
-            title: title,
-            tags: tags,
-            content: `'${draftToHtml(convertToRaw(content.getCurrentContent()))}'`,
-            file:  files,
-            authorId: supabase.auth.user().id,
-            categoryId: 1
+        setLoading(true);
+        uploadImage(files).then((data) => {
+            const post = {
+                id: uuidv4(),
+                title: title,
+                tags: tags,
+                content: `'${draftToHtml(convertToRaw(content.getCurrentContent()))}'`,
+                file:  data.key,
+                authorId: supabase.auth.user().id,
+                categoryId: categorieSelected
+    
+            }
+            createPosts(post).then((res) => {
+                console.log(res)
+            }).catch((error) => {
+                throw new Error('Error during created post')
+            })
+        }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            setLoading(false);
+        })
+    }
 
-        }
-        createPosts(post).then((res) => {
-            console.log(res)
-        }
-
-        )
-        console.log(title)
-        console.log(tags)
-        console.log(`"${draftToHtml(convertToRaw(content.getCurrentContent()))}"`)
-        console.log(files)
+    const handleCancel = () => {
+        setModalShow(true);
+        setTitle('')
+        setTags([])
+        setContent(EditorState.createEmpty())
+        setFiles([])
     }
 
     return (
         <Dialog
-            trigger={<Button>{trigger}</Button>}
+            trigger={<Button onClick={() => setModalShow(true)}>{trigger}</Button>}
             title="Créer une publication"
-            classNameChildren="flex flex-col gap-4">
+            classNameChildren="flex flex-col gap-4"
+            open={modalShow}>
                 <Input 
                     type="text"
                     placeholder="Titre de l'article"
@@ -83,6 +99,9 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
                 <div>
                 <Select 
                     options={categories}
+                    onChange={(categorie) =>
+                        setCategorieSelected(categorie.value)
+                    }
                 />
                 </div>
                 <Editor 
@@ -103,8 +122,16 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
                     onChange={(e) =>
                             setFiles(e)
                 }/>
+
                 <div className='flex gap-4 justify-end'>
-                    <Button color={ButtonColor.Dark}>Annuler</Button>
+                    <Dialog
+                        trigger={<Button color={ButtonColor.Dark} onClick={() => setModalConfirmShow(true)}>Annuler</Button>}
+                        title="Voulez-vous abandonner ?"
+                        open={modalConfirmShow}
+                    >
+                        <Button color={ButtonColor.Dark} onClick={() => setModalConfirmShow(true)}>Non</Button>
+                        <Button onClick={handleCancel}>Oui</Button>
+                    </Dialog>
                     <Button onClick={handleSubmitForm}>Publier</Button>
                 </div>
         </Dialog>
