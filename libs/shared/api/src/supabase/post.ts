@@ -37,3 +37,12 @@ export async function getPosts(category?: string) {
         console.log(error);
     }
 }
+
+export async function createPosts(posts) {
+    try {
+        const {data, error} = await supabase.from('posts').insert(posts,{ upsert: true })
+    } catch (error) {
+        console.log(error)
+    }
+
+}

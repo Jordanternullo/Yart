@@ -45,7 +45,7 @@ export function Index() {
                     <div
                         className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6 gap-0.5`}>
                         {loading
-                            ? [...Array(10)].map((index) => {
+                            ? [...Array(10)].map((value, index) => {
                                   return (
                                       <Skeleton
                                           key={index}

@@ -24,6 +24,8 @@ model posts {
   updatedAt DateTime @updatedAt
   title     String
   content   String?
+  tags      String[]
+  file      String[]
   author    users     @relation(fields: [authorId], references: [ref_user])
   authorId  String
   comments comments[]

@@ -10,3 +10,6 @@ body {
     background-color: theme('colors.dark.300');
     color: theme('colors.white');
 }
+
+// components
+@import 'components/select';

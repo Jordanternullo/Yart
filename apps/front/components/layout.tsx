@@ -1,9 +1,16 @@
 import { Menu, MenuItem } from '@mui/material';
-import { supabase } from '@yart/shared/api';
+import { getCategories, supabase } from '@yart/shared/api';
 import { Button, Input, NavItem } from '@yart/shared/ui';
 import Image from 'next/image';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+const Editor = dynamic(
+    () => import('react-draft-wysiwyg').then((mod) => mod.Editor),
+    { ssr: false }
+);
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import ModalCreatePost from './modal/modal-create-post';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -14,6 +21,8 @@ const Layout = (props: LayoutProps) => {
     const [collapsed, setCollapsed] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [authenticatedState, setAuthenticatedState] = useState(false);
+    
+
     const open = Boolean(anchorEl);
 
     useEffect(() => {
@@ -31,6 +40,7 @@ const Layout = (props: LayoutProps) => {
                 }
             }
         );
+        
         return () => {
             authListener.unsubscribe();
         };
@@ -42,7 +52,7 @@ const Layout = (props: LayoutProps) => {
     const handleLogout = async () => {
         try {
             await supabase.auth.signOut();
-            Router.reload('/');
+            Router.reload();
         } catch (error) {
             console.error(error);
         }
@@ -96,6 +106,7 @@ const Layout = (props: LayoutProps) => {
                         className={`!h-10 rounded-l-none focus:bg-transparent focus:outline-none`}
                     />
                 </div>
+                <ModalCreatePost trigger={'+ New'} />
                 <Button
                     onClick={() => console.log('notification')}
                     buttonIcon={'notification-4-line'}
