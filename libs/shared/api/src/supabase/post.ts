@@ -46,3 +46,20 @@ export async function createPosts(posts) {
     }
 
 }
+
+export async function getPostsInformation(username, idPost) {
+    try {
+        let query = supabase
+                .from('posts')
+                .select(
+                    `id, categoryId!inner(title), content, tags, title, createdAt, user:authorId(name), likes(authorId), comments(authorId))`
+                ).eq('id', idPost).eq('user.name', username)
+        const { data, error } = await query;
+        if (error) {
+            throw error;
+        }
+        return data[0];
+    }catch (error) {
+        console.log(error);
+    }
+}

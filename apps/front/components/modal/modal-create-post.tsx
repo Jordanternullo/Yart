@@ -31,7 +31,6 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
         getCategories()
             .then((categorie) => {
                 setCategories(categorie.map(option => ({value: option.id, label: option.title})));
-                console.log(categories)
             })
             .catch((error) => {
                 console.log(error);
@@ -48,7 +47,7 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
                 id: uuidv4(),
                 title: title,
                 tags: tags,
-                content: `'${draftToHtml(convertToRaw(content.getCurrentContent()))}'`,
+                content: `${draftToHtml(convertToRaw(content.getCurrentContent()))}`,
                 file:  data.key,
                 authorId: supabase.auth.user().id,
                 categoryId: categorieSelected

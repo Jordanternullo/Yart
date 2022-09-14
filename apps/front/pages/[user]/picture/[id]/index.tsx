@@ -1,18 +1,39 @@
 import { Avatar, Button, Icon, Input } from '@yart/shared/ui';
 import Layout from '../../../../components/layout';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { getPostsInformation } from '@yart/shared/api';
+import { format } from 'date-fns';
 
 export default function Index() {
     const router = useRouter();
     const user = router.query.user as string;
     const id = router.query.id as string;
+
+    const [post, setPost] = useState()
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        setLoading(true)
+        getPostsInformation(user, id).then((post) => {
+            console.log(post)
+            if(post?.length === 0) {
+                Router.push('/')
+            }
+            setPost(post)
+        setLoading(true)
+        }).finally(() => setLoading(false))
+    }, [])
     return (
+       
         <Layout hiddenLeftBar={true}>
             <div className="flex justify-center float-left w-[calc(100%-320px)] h-[calc(100vh-200px)]">
+            { !loading && post &&
                 <img
                     src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
                     className={`shadow-2xl`}
                 />
+            }
             </div>
             <div className={`bg-dark-400 w-80 float-right h-full`}>
                 <div className={`px-4 py-8`}>
@@ -50,6 +71,7 @@ export default function Index() {
                     </div>
                 </div>
             </div>
+            { !loading && post &&
             <div
                 className={`bg-dark-500 w-[calc(100%-320px)] float-left px-24 py-11`}>
                 <div className={`flex justify-between`}>
@@ -57,10 +79,10 @@ export default function Index() {
                         <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
                         <div className="flex flex-col justify-center">
                             <span className={`font-title text-base`}>
-                                Skypell
+                                {post.user.name}
                             </span>
                             <span className="text-xs font-light">
-                                Publié le 23 juillet 2022
+                                Publié le {format(new Date(post.createdAt), 'd MMMM yyyy')}
                             </span>
                         </div>
                     </div>
@@ -82,38 +104,17 @@ export default function Index() {
                     </div>
                 </div>
                 <div className={`flex gap-4 flex-wrap mt-7 mb-9`}>
-                    <Button>Item 1</Button>
-                    <Button>Item long 2</Button>
-                    <Button>Item 3</Button>
-                    <Button>Item 4</Button>
-                    <Button>Item 5</Button>
-                    <Button>Item 6</Button>
-                    <Button>Item encore plus long 7</Button>
-                    <Button>Item 8</Button>
-                    <Button>Item 9</Button>
-                    <Button>Item 10</Button>
-                    <Button>Item 11</Button>
-                    <Button>Item 12</Button>
-                    <Button>Item 13</Button>
-                    <Button>Item 14</Button>
-                    <Button>Item 15</Button>
-                    <Button>Item 16</Button>
+                    {post.tags?.map((item, index) => {
+                        return (
+                            <Button key={index}>{JSON.parse(item).text}</Button>
+                        )
+                    })
+                    }
                 </div>
                 <div>
-                    <h2 className="font-title text-3xl mb-3">Titre du post</h2>
-                    <p className="text-base font-light">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Duis ac sapien aliquam, efficitur nisl pulvinar, auctor
-                        metus. Suspendisse rutrum nibh id ex pellentesque
-                        cursus. Mauris bibendum tincidunt mauris quis mattis.
-                        Nulla ut faucibus arcu. Maecenas rhoncus, velit non
-                        auctor efficitur, eros quam suscipit dolor, nec pharetra
-                        justo nisi et magna. Etiam a velit vel justo tristique
-                        auctor. Maecenas tincidunt massa et turpis feugiat,
-                        feugiat vehicula diam maximus. Duis in porta nisl, vitae
-                        mollis nulla. `` Nullam nibh est, fermentum nec
-                        efficitur eu, tincidunt ut turpis. Curabitur in dolor
-                        mi. Quisque posuere egestas purus eget blandit.
+                    <h2 className="font-title text-3xl mb-3">{post.title}</h2>
+                    <p className="text-base font-light"  dangerouslySetInnerHTML={{ __html: post.content }}>
+                        
                     </p>
                 </div>
                 <div>
@@ -346,6 +347,8 @@ export default function Index() {
                     </div>
                 </div>
             </div>
+        }
+
         </Layout>
     );
 }

@@ -51,7 +51,6 @@ export default function Index() {
                               );
                           })
                         : posts.map((item, index) => {
-                              console.log(item);
                               return (
                                   <div
                                       key={index}
