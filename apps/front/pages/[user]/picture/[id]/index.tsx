@@ -4,7 +4,9 @@ import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getPostsInformation } from '@yart/shared/api';
 import { format } from 'date-fns';
-import { join } from 'path';
+import Carousel from 'react-material-ui-carousel';
+import process, { env } from 'process';
+import { Paper } from '@mui/material';
 
 export default function Index() {
     const router = useRouter();
@@ -22,21 +24,29 @@ export default function Index() {
                     Router.push('/');
                 }
                 setPost(post);
-                setLoading(true);
+                setLoading(false);
             })
             .finally(() => setLoading(false));
     }, []);
     return (
         <Layout hiddenLeftBar={true}>
             <div className="flex justify-center float-left w-[calc(100%-320px)] h-[calc(100vh-200px)]">
-                {!loading &&
-                    post &&
-                    post.file.map((file) => (
-                        <img
-                            src={`https://mtkrxtwidpzidkyuqjze.supabase.co/storage/v1/object/public/${file}`}
-                            className={`shadow-2xl`}
-                        />
-                    ))}
+            { !loading && post &&
+                <Carousel
+                    animation="fade" navButtonsAlwaysVisible autoPlay={false}
+                    className='w-full h-full carousel'
+                >
+                    {post.file.map((img, index) => (
+                        <Paper key={index} elevation={10} style={{ height: '100%' }} className="flex justify-center items-center !bg-transparent">
+                            <img
+                                src={`https://mtkrxtwidpzidkyuqjze.supabase.co/storage/v1/object/public/${img}`}
+                                className={`shadow-2xl`}
+                            />
+                        </Paper>
+                    )
+                    )}
+                </Carousel>
+            }
             </div>
             <div className={`bg-dark-400 w-80 float-right h-full`}>
                 <div className={`px-4 py-8`}>

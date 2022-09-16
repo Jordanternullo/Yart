@@ -1,1 +1,15 @@
 @import 'libs/shared/ui/src/lib/styles/main';
+
+.carousel {
+    div {
+        &:first-child {
+            > div {
+                div {
+                    height: 100%;
+                    img {
+                    }
+                }
+            }
+        }
+    }
+}
