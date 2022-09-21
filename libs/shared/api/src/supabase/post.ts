@@ -40,9 +40,29 @@ export async function getPosts(category?: string) {
 
 export async function createPosts(posts) {
     try {
-        const {data, error} = await supabase.from('posts').insert(posts,{ upsert: true })
+        const { data, error } = await supabase
+            .from('posts')
+            .insert(posts, { upsert: true });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
+}
 
+export async function getPostsInformation(username, idPost) {
+    try {
+        const query = supabase
+            .from('posts')
+            .select(
+                `id, categoryId!inner(title), content, tags, title, file, createdAt, user:authorId(name), likes(authorId), comments(authorId))`
+            )
+            .eq('id', idPost)
+            .eq('user.name', username);
+        const { data, error } = await query;
+        if (error) {
+            throw error;
+        }
+        return data[0];
+    } catch (error) {
+        console.log(error);
+    }
 }

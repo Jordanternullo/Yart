@@ -46,7 +46,6 @@ export function InputTags(props: InputTagsProps) {
 
     const disabledClassName = inputProps.disabled ? '!bg-dark-200' : '';
     const handleAddition = (tag) => {;
-        console.log(tag)
         onChange && onChange(tag);
       };
     const handleDrag = (tag, currPos, newPos) => {
