@@ -63,6 +63,8 @@ export function Index() {
                                               <Card
                                                   post={item}
                                                   className={`h-full min-h-[0px] min-w-[0px]`}
+                                                  onClickLike={() => console.log('click like')}
+                                                  onClickComment={() => console.log('click comment')}
                                               />
                                           </Link>
                                       </div>

@@ -2,10 +2,9 @@ import { Avatar, Button, Icon, Input } from '@yart/shared/ui';
 import Layout from '../../../../components/layout';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getPostsInformation } from '@yart/shared/api';
+import { changeLikePost, getPostsInformation, supabase } from '@yart/shared/api';
 import { format } from 'date-fns';
 import Carousel from 'react-material-ui-carousel';
-import process, { env } from 'process';
 import { Paper } from '@mui/material';
 
 export default function Index() {
@@ -15,7 +14,9 @@ export default function Index() {
 
     const [post, setPost] = useState();
     const [loading, setLoading] = useState(false);
-
+    const [likeState, setLikeState] = useState(false);
+    const [likes, setLikes] = useState(0);
+    const stateLikeButtonClassName = likeState ? 'text-primary-500' : '';
     useEffect(() => {
         setLoading(true);
         getPostsInformation(user, id)
@@ -24,10 +25,27 @@ export default function Index() {
                     Router.push('/');
                 }
                 setPost(post);
+                setLikes(post.likes.length)
+                if(post.likes.filter((authorId) => authorId !== supabase.auth.user().id).length > 0) {
+                    setLikeState(true);
+                }
+
                 setLoading(false);
             })
             .finally(() => setLoading(false));
-    }, []);
+    }, [ id, user]);
+    
+
+    const likePost = () => {
+        setLikeState(!likeState)
+        setLikes(likeState ? likes-1 : likes+1)
+        changeLikePost(post.id, supabase.auth.user().id).then(data => {
+        }).catch(error => {
+            setLikes(likeState ? likes-1 : likes+1)
+            setLikeState(!likeState)
+        })
+    }
+    
     return (
         <Layout hiddenLeftBar={true}>
             <div className="flex justify-center float-left w-[calc(100%-320px)] h-[calc(100vh-200px)]">
@@ -39,8 +57,8 @@ export default function Index() {
                     {post.file.map((img, index) => (
                         <Paper key={index} elevation={10} style={{ height: '100%' }} className="flex justify-center items-center !bg-transparent">
                             <img
-                                src={`https://mtkrxtwidpzidkyuqjze.supabase.co/storage/v1/object/public/${img}`}
-                                className={`shadow-2xl`}
+                                src={`https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${img}`}
+                                className={`shadow-2xl max-h-full`}
                             />
                         </Paper>
                     )
@@ -105,15 +123,20 @@ export default function Index() {
                         </div>
                         <div className="flex gap-4">
                             <div
-                                className={`flex items-center space-x-1 hover:cursor-pointer`}>
-                                <span className={`text-base`}>28</span>
+                                className={`flex items-center space-x-1 hover:cursor-pointer`}
+                                onClick={() => likePost()}>
+                                <span className={`text-base`}>{likes}</span>
                                 <Icon
-                                    name={'thumb-up-line'}
-                                    className={`text-2xl`}></Icon>
+                                    name={
+                                        likeState
+                                            ? 'thumb-up-fill'
+                                            : 'thumb-up-line'
+                                    }
+                                    className={`text-2xl ${stateLikeButtonClassName}`}></Icon>
                             </div>
                             <div
                                 className={`flex items-center space-x-1 hover:cursor-pointer`}>
-                                <span className={`text-base`}>13</span>
+                                <span className={`text-base`}>{post.comments.length}</span>
                                 <Icon
                                     name={'chat-3-line'}
                                     className={`text-2xl`}></Icon>

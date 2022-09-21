@@ -63,7 +63,6 @@ const ModalCreatePost = (props: ModalCreatePostProps) => {
             .then((data) => {
                 console.log(data);
                 const post = {
-                    id: uuidv4(),
                     title: title,
                     tags: tags,
                     content: `${draftToHtml(

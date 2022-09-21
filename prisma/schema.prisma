@@ -11,7 +11,7 @@ datasource db {
 }
 
 model users {
-  ref_user    String     @id @default(uuid())
+  ref_user    String     @id @default(dbgenerated("gen_random_uuid()::TEXT"))
   name        String?
   posts posts[]
   comments comments[]
@@ -19,9 +19,9 @@ model users {
 }
 
 model posts {
-  id        String      @id @default(uuid())
+  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
   title     String
   content   String?
   tags      String[]
@@ -35,7 +35,7 @@ model posts {
 }
 
 model comments {
-  id        String      @id @default(uuid())
+  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
   author    users     @relation(fields: [authorId], references: [ref_user])
   authorId  String
   posts     posts    @relation(fields: [postId], references: [id])
@@ -43,7 +43,7 @@ model comments {
 }
 
 model likes {
-  id        String      @id @default(uuid())
+  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
   author    users     @relation(fields: [authorId], references: [ref_user])
   authorId  String
   posts     posts    @relation(fields: [postId], references: [id])
@@ -51,7 +51,7 @@ model likes {
 }
 
 model categories {
-  id        String      @id @default(uuid())
+  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
   title      String
   posts posts[]
 }
