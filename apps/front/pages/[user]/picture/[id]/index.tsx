@@ -147,7 +147,7 @@ export default function Index() {
                         {post.tags?.map((item, index) => {
                             return (
                                 <Button key={index}>
-                                    {JSON.parse(item).text}
+                                    {item.text}
                                 </Button>
                             );
                         })}

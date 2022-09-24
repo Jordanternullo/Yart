@@ -1,16 +1,24 @@
 import { SupabaseRealtimeClient } from '@supabase/supabase-js/dist/module/lib/SupabaseRealtimeClient';
+import slugify from 'react-slugify';
 import { supabase } from './client';
 
-export async function getPosts(category?: string) {
+export async function getPosts(category?: string, tag?: string) {
     try {
+        console.log(tag)
         let query = supabase
             .from('posts')
             .select(
-                `id, categoryId!inner(title), title, user:authorId(name), likes(authorId), comments(authorId))`
+                `id, categoryId!inner(title), title, tags, user:authorId(name), likes(authorId), comments(authorId))`
             );
         if (category) {
             query = query.eq('categoryId.title', category);
         }
+        if(tag) {
+            query = supabase.rpc('get_posts_by_tag', {tag: tag}).select(
+                `id, categoryId!inner(title), title, tags, user:authorId(name), likes(authorId), comments(authorId))`
+            );
+        }
+        
         const { data, error } = await query;
         if (data) {
             data.map((item) => {

@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import React, { Component, useState } from 'react';
+import slugify from 'react-slugify';
 const ReactTags = dynamic(() => import('react-tag-input').then((module) => module.WithContext), { ssr: false });
 
 /* eslint-disable-next-line */
@@ -46,7 +47,7 @@ export function InputTags(props: InputTagsProps) {
 
     const disabledClassName = inputProps.disabled ? '!bg-dark-200' : '';
     const handleAddition = (tag) => {;
-        onChange && onChange(tag);
+        onChange && onChange({id: slugify(tag.id), text: tag.text});
       };
     const handleDrag = (tag, currPos, newPos) => {
     const newTags = tags.slice();

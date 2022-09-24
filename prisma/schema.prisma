@@ -24,7 +24,7 @@ model posts {
   updatedAt DateTime @default(now())
   title     String
   content   String?
-  tags      String[]
+  tags      Json
   file      String[]
   author    users     @relation(fields: [authorId], references: [ref_user])
   authorId  String
