@@ -2,10 +2,11 @@ import { Avatar, Button, Icon, Input } from '@yart/shared/ui';
 import Layout from '../../../../components/layout';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { changeLikePost, getPostsInformation, supabase } from '@yart/shared/api';
+import { changeLikePost, getPostsByTags, getPostsByUser, getPostsInformation, supabase } from '@yart/shared/api';
 import { format } from 'date-fns';
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
+import Link from 'next/link';
 
 export default function Index() {
     const router = useRouter();
@@ -13,6 +14,8 @@ export default function Index() {
     const id = router.query.id as string;
 
     const [post, setPost] = useState();
+    const [similarPost, setSimilarPost] = useState([]);
+    const [suggestPost, setSuggestPost] = useState([]);
     const [loading, setLoading] = useState(false);
     const [likeState, setLikeState] = useState(false);
     const [likes, setLikes] = useState(0);
@@ -29,10 +32,16 @@ export default function Index() {
                 if(post.likes.filter((authorId) => authorId !== supabase.auth.user().id).length > 0) {
                     setLikeState(true);
                 }
-
+                getPostsByUser(user, post, 6).then((posts) => {
+                    setSimilarPost(posts)
+                })
+                getPostsByTags(user, post, 6).then((posts) => {
+                    setSuggestPost(posts)
+                })
                 setLoading(false);
             })
             .finally(() => setLoading(false));
+        
     }, [ id, user]);
     
 
@@ -70,35 +79,33 @@ export default function Index() {
                 <div className={`px-4 py-8`}>
                     <h3>Articles similaire de {user}</h3>
                     <div className={`grid grid-cols-3 gap-2 mt-2`}>
-                        <img
-                            src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
-                            className={`shadow-2xl`}
-                        />
-                        <img
-                            src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
-                            className={`shadow-2xl`}
-                        />
-                        <img
-                            src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
-                            className={`shadow-2xl`}
-                        />
+                        {similarPost.map((post, index) => {
+                            return (
+                                <Link key={index} href={`/${user}/picture/${post.id}`}>
+                                    <img
+                                        src={`https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${post.file[0]}`}
+                                        className={`shadow-2xl hover:cursor-pointer`}
+                                    />
+                                </Link>
+                            )}
+                        ) 
+                        }
                     </div>
                 </div>
                 <div className={`px-4 py-8`}>
                     <h3>Articles suggérés</h3>
                     <div className={`grid grid-cols-3 gap-2 mt-2`}>
-                        <img
-                            src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
-                            className={`shadow-2xl`}
-                        />
-                        <img
-                            src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
-                            className={`shadow-2xl`}
-                        />
-                        <img
-                            src={`https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$`}
-                            className={`shadow-2xl`}
-                        />
+                        {suggestPost.map((post, index) => {
+                            return (
+                                <Link key={index} href={`/${post.user.name}/picture/${post.id}`}>
+                                    <img
+                                        src={`https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${post.file[0]}`}
+                                        className={`shadow-2xl hover:cursor-pointer`}
+                                    />
+                                </Link>
+                            )}
+                        ) 
+                        }
                     </div>
                 </div>
             </div>
@@ -146,9 +153,11 @@ export default function Index() {
                     <div className={`flex gap-4 flex-wrap mt-7 mb-9`}>
                         {post.tags?.map((item, index) => {
                             return (
-                                <Button key={index}>
-                                    {item.text}
-                                </Button>
+                                <Link key={index} href={`/tags/${item.id}`}>
+                                    <Button >
+                                        {item.text}
+                                    </Button>
+                                </Link>
                             );
                         })}
                     </div>

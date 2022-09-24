@@ -4,18 +4,17 @@ import { supabase } from './client';
 
 export async function getPosts(category?: string, tag?: string) {
     try {
-        console.log(tag)
         let query = supabase
             .from('posts')
             .select(
-                `id, categoryId!inner(title), title, tags, user:authorId(name), likes(authorId), comments(authorId))`
+                `id, categoryId!inner(title), title, tags, file, user:authorId(name), likes(authorId), comments(authorId))`
             );
         if (category) {
             query = query.eq('categoryId.title', category);
         }
         if(tag) {
             query = supabase.rpc('get_posts_by_tag', {tag: tag}).select(
-                `id, categoryId!inner(title), title, tags, user:authorId(name), likes(authorId), comments(authorId))`
+                `id, categoryId!inner(title), title, tags, file, user:authorId(name), likes(authorId), comments(authorId))`
             );
         }
         
@@ -74,6 +73,69 @@ export async function getPostsInformation(username, idPost) {
     } catch (error) {
         console.log(error);
     }
+}
+
+export async function getPostsByUser(user: string, postExclude?, elementCount?: number) {
+    try {
+        let query = supabase
+        .from('posts')
+        .select(
+            `id, categoryId!inner(title), title, tags, file, user:authorId(name), likes(authorId), comments(authorId))`
+        ).eq('user.name', user)
+        let { data, error } = await query;
+        if (postExclude) {
+            data = data.filter((item) => item.id !== postExclude.id);
+
+            data?.map((item) => {
+                item.relevanceIndex = item.tags.filter(tag => postExclude.tags.map(data => data.text.toLowerCase()).indexOf(tag.text.toLowerCase()) !== -1).length
+            })
+            data?.sort((current,next) => next.relevanceIndex - current.relevanceIndex)
+        }
+        
+        if (error) {
+            throw error;
+        }
+        if(elementCount) {
+            return data?.filter((item) => item.relevanceIndex > 0).slice(0, elementCount);
+        }
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+
+    
+}
+
+export async function getPostsByTags(user, postExclude, elementCount?: number) {
+    try {
+        let query = supabase
+        .from('posts')
+        .select(
+            `id, categoryId!inner(title), title, tags, file, user:authorId(name), likes(authorId), comments(authorId))`
+        )
+        let { data, error } = await query;
+        if (data) {
+            data = data.filter((item) => item.id !== postExclude.id);
+
+            data?.map((item) => {
+                item.relevanceIndex = item.tags.filter(tag => postExclude.tags.map(data => data.text.toLowerCase()).indexOf(tag.text.toLowerCase()) !== -1).length
+            })
+            data?.sort((current,next) => next.relevanceIndex - current.relevanceIndex)
+
+        }
+        
+        if (error) {
+            throw error;
+        }
+        if(elementCount) {
+            return data?.filter((item) => item.relevanceIndex > 0 && item.user.name !== user).slice(0, elementCount);
+        }
+        return data?.filter((item) => item.relevanceIndex > 0 && item.user.name !== user);
+    } catch (error) {
+        console.log(error);
+    }
+
+    
 }
 
 export async function changeLikePost(postId: string, userId: string) {

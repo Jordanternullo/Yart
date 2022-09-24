@@ -12,6 +12,7 @@ import Icon from '../icon/icon';
 export interface CardProps {
     post: {
         title: string;
+        file: string[];
         user?: {
             name: string;
             avatar: string;
@@ -71,7 +72,7 @@ export function Card(props: CardProps) {
                         : ''
                 }`}
                 image={
-                    'https://image-us.samsung.com/SamsungUS/home/audio/galaxy-buds/MB-04-JustWhatYouWantV4.jpg?$cm-g-fb-full-bleed-img-mobile-jpg$'
+                    `https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${post.file[0]}`
                 }
             />
             <Box
