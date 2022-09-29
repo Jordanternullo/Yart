@@ -1,19 +1,20 @@
-import { Avatar, Button, Icon, Input } from '@yart/shared/ui';
+import { Avatar, Button, Icon, Input, TextEditor } from '@yart/shared/ui';
 import Layout from '../../../../components/layout';
 import Router, { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { changeLikePost, getPostsByTags, getPostsByUser, getPostsInformation, supabase } from '@yart/shared/api';
+import { KeyboardEvent, useEffect, useState } from 'react';
+import { changeLikePost, getPostsByTags, getPostsByUser, getPostsInformation, supabase, createCommentPost } from '@yart/shared/api';
 import { format } from 'date-fns';
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
 import Link from 'next/link';
+import { timeSince } from 'apps/front/utils/utils';
 
 export default function Index() {
     const router = useRouter();
     const user = router.query.user as string;
     const id = router.query.id as string;
 
-    const [post, setPost] = useState();
+    const [post, setPost] = useState<any>();
     const [similarPost, setSimilarPost] = useState([]);
     const [suggestPost, setSuggestPost] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -41,7 +42,6 @@ export default function Index() {
                 setLoading(false);
             })
             .finally(() => setLoading(false));
-        
     }, [ id, user]);
     
 
@@ -52,6 +52,21 @@ export default function Index() {
         }).catch(error => {
             setLikes(likeState ? likes-1 : likes+1)
             setLikeState(!likeState)
+        })
+    }
+
+    const handleKeyUp = (e: KeyboardEvent<HTMLImageElement>) => {
+        if(e.key === 'Enter') {
+            addCommentToPost();
+        }
+    }
+
+    const addCommentToPost = () => {
+        createCommentPost('test', post.id, supabase.auth.user().id).then((data) => {
+            if(post) {
+                post.comments.push(data)
+                setPost(post)
+            }
         })
     }
     
@@ -66,7 +81,7 @@ export default function Index() {
                     {post.file.map((img, index) => (
                         <Paper key={index} elevation={10} style={{ height: '100%' }} className="flex justify-center items-center !bg-transparent">
                             <img
-                                src={`https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${img}`}
+                                src={`https://llizjdazuugceeynocci.supabase.co/storage/v1/object/public/${img}`}
                                 className={`shadow-2xl max-h-full`}
                             />
                         </Paper>
@@ -83,7 +98,7 @@ export default function Index() {
                             return (
                                 <Link key={index} href={`/${user}/picture/${post.id}`}>
                                     <img
-                                        src={`https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${post.file[0]}`}
+                                        src={`https://llizjdazuugceeynocci.supabase.co/storage/v1/object/public/${post.file[0]}`}
                                         className={`shadow-2xl hover:cursor-pointer`}
                                     />
                                 </Link>
@@ -99,7 +114,7 @@ export default function Index() {
                             return (
                                 <Link key={index} href={`/${post.user.name}/picture/${post.id}`}>
                                     <img
-                                        src={`https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${post.file[0]}`}
+                                        src={`https://llizjdazuugceeynocci.supabase.co/storage/v1/object/public/${post.file[0]}`}
                                         className={`shadow-2xl hover:cursor-pointer`}
                                     />
                                 </Link>
@@ -178,199 +193,56 @@ export default function Index() {
                             <Input
                                 containerClassName="w-full h-fit"
                                 placeholder={'Laisser un commentaire'}
+                                onKeyUp={handleKeyUp}
                             />
                         </div>
                         <div className={`w-2/3 m-auto p-4`}>
-                            <div className={`flex gap-4 mb-4`}>
-                                <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
-                                <div>
-                                    <div
-                                        className={`bg-dark-400 border-dark-300 rounded-md-4 border-2 px-4 py-2 rounded-md`}>
-                                        <span
-                                            className={`text-light-200 mr-2.5`}>
-                                            Skypell
-                                        </span>
-                                        <span
-                                            className={`text-light-500 text-[10px] font-light`}>
-                                            Il y a 2 min
-                                        </span>
-                                        <p className={`font-light`}>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit. Duis ac
-                                            sapien aliquam, efficitur nisl
-                                            pulvinar, auctor metus. Suspendisse
-                                            rutrum nibh id ex pellentesque
-                                            cursus. Mauris bibendum tincidunt
-                                            mauris quis mattis.
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-6 mt-2">
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'thumb-up-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                J'aime
-                                            </span>
+                            {post.comments.map((comment, index) => {
+                                return (
+                                    <div className={`flex gap-4 mb-4`} key={index}>
+                                        <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
+                                        <div>
+                                            <div
+                                                className={`bg-dark-400 border-dark-300 rounded-md-4 border-2 px-4 py-2 rounded-md`}>
+                                                <span
+                                                    className={`text-light-200 mr-2.5`}>
+                                                    {comment.user.name}
+                                                </span>
+                                                <span
+                                                    className={`text-light-500 text-[10px] font-light`}>
+                                                        Il y a {timeSince(new Date(comment.createdAt))}
+                                                </span>
+                                                <p className={`font-light`}>
+                                                    {comment.comment}
+                                                </p>
+                                            </div>
+                                            <div className="flex gap-6 mt-2">
+                                                <div
+                                                    className={`flex items-center space-x-2 hover:cursor-pointer`}>
+                                                    <Icon
+                                                        name={'thumb-up-line'}
+                                                        className={`text-base`}></Icon>
+                                                    <span
+                                                        className={`text-sm font-light`}>
+                                                        J'aime
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    className={`flex items-center space-x-2 hover:cursor-pointer`}>
+                                                    <Icon
+                                                        name={'reply-line'}
+                                                        className={`text-base`}></Icon>
+                                                    <span
+                                                        className={`text-sm font-light`}>
+                                                        Répondre
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'reply-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                Répondre
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={`flex gap-4 mb-4 ml-24`}>
-                                <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
-                                <div>
-                                    <div
-                                        className={`bg-dark-400 border-dark-300 rounded-md-4 border-2 px-4 py-2 rounded-md`}>
-                                        <span
-                                            className={`text-light-200 mr-2.5`}>
-                                            Skypell
-                                        </span>
-                                        <span
-                                            className={`text-light-500 text-[10px] font-light`}>
-                                            Il y a 2 min
-                                        </span>
-                                        <p className={`font-light`}>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit. Duis ac
-                                            sapien aliquam, efficitur nisl
-                                            pulvinar, auctor metus. Suspendisse
-                                            rutrum nibh id ex pellentesque
-                                            cursus. Mauris bibendum tincidunt
-                                            mauris quis mattis.
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-6 mt-2">
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'thumb-up-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                J'aime
-                                            </span>
-                                        </div>
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'reply-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                Répondre
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={`flex gap-4 mb-4 ml-24`}>
-                                <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
-                                <div>
-                                    <div
-                                        className={`bg-dark-400 border-dark-300 rounded-md-4 border-2 px-4 py-2 rounded-md`}>
-                                        <span
-                                            className={`text-light-200 mr-2.5`}>
-                                            Skypell
-                                        </span>
-                                        <span
-                                            className={`text-light-500 text-[10px] font-light`}>
-                                            Il y a 2 min
-                                        </span>
-                                        <p className={`font-light`}>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit. Duis ac
-                                            sapien aliquam, efficitur nisl
-                                            pulvinar, auctor metus. Suspendisse
-                                            rutrum nibh id ex pellentesque
-                                            cursus. Mauris bibendum tincidunt
-                                            mauris quis mattis.
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-6 mt-2">
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'thumb-up-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                J'aime
-                                            </span>
-                                        </div>
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'reply-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                Répondre
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={`w-2/3 m-auto p-4`}>
-                            <div className={`flex gap-4 mb-4`}>
-                                <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
-                                <div>
-                                    <div
-                                        className={`bg-dark-400 border-dark-300 rounded-md-4 border-2 px-4 py-2 rounded-md`}>
-                                        <span
-                                            className={`text-light-200 mr-2.5`}>
-                                            Skypell
-                                        </span>
-                                        <span
-                                            className={`text-light-500 text-[10px] font-light`}>
-                                            Il y a 2 min
-                                        </span>
-                                        <p className={`font-light`}>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit. Duis ac
-                                            sapien aliquam, efficitur nisl
-                                            pulvinar, auctor metus. Suspendisse
-                                            rutrum nibh id ex pellentesque
-                                            cursus. Mauris bibendum tincidunt
-                                            mauris quis mattis.
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-6 mt-2">
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'thumb-up-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                J'aime
-                                            </span>
-                                        </div>
-                                        <div
-                                            className={`flex items-center space-x-2 hover:cursor-pointer`}>
-                                            <Icon
-                                                name={'reply-line'}
-                                                className={`text-base`}></Icon>
-                                            <span
-                                                className={`text-sm font-light`}>
-                                                Répondre
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    </div>      
+                                )
+                            })}
+                            
                             <div className={`flex gap-4 mb-4 ml-24`}>
                                 <Avatar image="https://is4-ssl.mzstatic.com/image/thumb/aIvtSHOcgUL4ym2l6eQHPQ/1200x675mf.jpg" />
                                 <div>

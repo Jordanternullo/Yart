@@ -72,7 +72,7 @@ export function Card(props: CardProps) {
                         : ''
                 }`}
                 image={
-                    `https://mjmoiscyzblnjrituqaw.supabase.co/storage/v1/object/public/${post.file[0]}`
+                    `https://llizjdazuugceeynocci.supabase.co/storage/v1/object/public/${post.file[0]}`
                 }
             />
             <Box

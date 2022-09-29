@@ -11,47 +11,53 @@ datasource db {
 }
 
 model users {
-  ref_user    String     @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  name        String?
-  posts posts[]
+  ref_user String     @id @default(dbgenerated("gen_random_uuid()::TEXT"))
+  name     String?
+  posts    posts[]
   comments comments[]
-  likes likes[]
+  likes    likes[]
 }
 
 model posts {
-  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  title     String
-  content   String?
-  tags      Json
-  file      String[]
-  author    users     @relation(fields: [authorId], references: [ref_user])
-  authorId  String
-  comments comments[]
-  likes likes[]
-  category     categories    @relation(fields: [categoryId], references: [id])
-  categoryId    String
+  id         String     @id @default(dbgenerated("gen_random_uuid()::TEXT"))
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now())
+  title      String
+  content    String?
+  tags       Json
+  file       String[]
+  author     users      @relation(fields: [authorId], references: [ref_user])
+  authorId   String
+  comments   comments[]
+  likes      likes[]
+  category   categories @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
 
 model comments {
-  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  author    users     @relation(fields: [authorId], references: [ref_user])
+  id        String     @id @default(dbgenerated("gen_random_uuid()::TEXT"))
+  author    users      @relation(fields: [authorId], references: [ref_user])
   authorId  String
-  posts     posts    @relation(fields: [postId], references: [id])
+  posts     posts      @relation(fields: [postId], references: [id])
   postId    String
+  parent    comments?  @relation("parentComment", fields: [parentId], references: [id])
+  parentId  String?
+  reponse   comments[] @relation("parentComment")
+  comment   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
 }
 
 model likes {
-  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  author    users     @relation(fields: [authorId], references: [ref_user])
-  authorId  String
-  posts     posts    @relation(fields: [postId], references: [id])
-  postId    String
+  id       String @id @default(dbgenerated("gen_random_uuid()::TEXT"))
+  author   users  @relation(fields: [authorId], references: [ref_user])
+  authorId String
+  posts    posts  @relation(fields: [postId], references: [id])
+  postId   String
 }
 
 model categories {
-  id        String      @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  title      String
+  id    String  @id @default(dbgenerated("gen_random_uuid()::TEXT"))
+  title String
   posts posts[]
 }

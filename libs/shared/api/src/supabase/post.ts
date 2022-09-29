@@ -61,7 +61,7 @@ export async function getPostsInformation(username, idPost) {
         const query = supabase
             .from('posts')
             .select(
-                `id, categoryId!inner(title), content, tags, title, file, createdAt, user:authorId(name), likes(authorId), comments(authorId))`
+                `id, categoryId!inner(title), content, tags, title, file, createdAt, user:authorId(name), likes(authorId), comments(user:authorId(name), comment, createdAt, updatedAt)))`
             )
             .eq('id', idPost)
             .eq('user.name', username);
